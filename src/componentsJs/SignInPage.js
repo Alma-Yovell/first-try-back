@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "./firebase";  // Import Firestore instance from firebase.js
-import './SignInPage.css';
-
+import { db } from "../data/firebase"; // Import Firestore instance from firebase.js
+import "../componentsCss/SignInPage.css";
 
 const SignInPage = () => {
   const [name, setName] = useState("");
@@ -19,28 +18,18 @@ const SignInPage = () => {
     }
 
     try {
-      // Debug log to check if function is being triggered
-      console.log("Attempting to add user:", name, password);
-
       // Add user data to Firestore (in the 'users' collection)
-      const docRef = await addDoc(collection(db, "users"), {
-        name,
-        password,
-      });
-      
-      // Success log and user added to Firestore
-      console.log("User added with ID:", docRef.id);  // docRef.id is the document ID
-      
-      // Reset form and clear error
+      const docRef = await addDoc(collection(db, "users"), { name, password });
+
+      // Reset form
       setName("");
       setPassword("");
       setError("");
-      
-      alert("Sign-in successful!");
-    } catch (error) {
-      // Handle errors in adding document
-      console.error("Error adding document: ", error);
-      setError("An error occurred, please try again.");
+
+      alert(`Sign-in successful! User ID: ${docRef.id}`);
+    } catch (err) {
+      console.error("Error adding document: ", err);
+      setError("Failed to sign in. Please try again.");
     }
   };
 
@@ -66,7 +55,7 @@ const SignInPage = () => {
         </div>
         <button type="submit">Sign In</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };
