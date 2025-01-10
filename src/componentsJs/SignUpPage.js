@@ -1,14 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../data/firebase"; // Import Firestore instance from firebase.js
-import "../componentsCss/SignInPage.css";
+import "../componentsCss/SignUpPage.css";
 
-const SignInPage = () => {
+const SignUpPage = () => {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSignIn = async (e) => {
+  const handleGoToHome = () => {
+      navigate("/homePage"); // Navigate to HomePage
+  };
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
     // Validate the form
@@ -26,17 +33,17 @@ const SignInPage = () => {
       setPassword("");
       setError("");
 
-      alert(`Sign-in successful! User ID: ${docRef.id}`);
+      alert(`Sign-up successful! User ID: ${docRef.id}`);
     } catch (err) {
       console.error("Error adding document: ", err);
-      setError("Failed to sign in. Please try again.");
+      setError("Failed to sign up. Please try again.");
     }
   };
 
   return (
-    <div className="sign-in-container">
-      <h1>Sign In</h1>
-      <form onSubmit={handleSignIn}>
+    <div className="sign-up-container">
+      <h1>Sign Up</h1>
+      <form onSubmit={handleSignUp}>
         <div>
           <input
             type="text"
@@ -53,11 +60,12 @@ const SignInPage = () => {
             placeholder="Enter your password"
           />
         </div>
-        <button type="submit">Sign In</button>
+        <button type="submit">Sign Up</button>
       </form>
       {error && <p className="error-message">{error}</p>}
+      <button onClick={handleGoToHome}>Go to Home Page</button>
     </div>
   );
 };
 
-export default SignInPage;
+export default SignUpPage;
